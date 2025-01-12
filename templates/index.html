@@ -3,150 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Puntos Faciales Ana Franco</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Reconocimiento Facial</title>
+    <!-- Enlace al archivo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #0f2027, #2c5364, #3a6073);
-            background-size: 400% 400%;
-            animation: backgroundAnimation 12s ease infinite;
-            color: #E0E0E0;
             font-family: 'Arial', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
 
-        @keyframes backgroundAnimation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .animated-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0px 8px 15px rgba(255, 255, 255, 0.2);
-        }
         .container {
-            animation: fadeIn 1.2s ease-out;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        h1, h2 {
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .upload-section, .original-image-section, .historico-images-section, .processed-images-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .upload-section {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .upload-section h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .upload-section input[type="file"] {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .upload-section button {
+            background-color: #00b894;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-section button:hover {
+            background-color: #00a09d;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .image-gallery img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-gallery img:hover {
+            transform: scale(1.05);
+        }
+
+        @media screen and (max-width: 768px) {
+            .upload-section h1 {
+                font-size: 20px;
+            }
+
+            .image-container img {
+                max-width: 90%;
+            }
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-
-    <div class="container max-w-lg w-full p-8 bg-gray-900 rounded-3xl shadow-xl text-center">
-        <h1 class="text-4xl font-bold mb-6 text-blue-400">Detección de Puntos Faciales</h1>
-
-        <section class="mb-8">
-            <h2 class="text-lg font-semibold text-teal-300 mb-4">Sube una Imagen</h2>
-            <form id="uploadForm" class="flex flex-col items-center" enctype="multipart/form-data">
-                <label class="flex flex-col items-center justify-center w-40 h-40 rounded-full bg-blue-300 bg-opacity-10 hover:bg-opacity-20 transition cursor-pointer border-4 border-dotted border-teal-300">
-                    <div class="text-teal-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2a10 10 0 00-10 10 10 10 0 0010 10 10 10 0 0010-10 10 10 0 00-10-10zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
-                        </svg>
-                        <p class="mt-2 text-sm">Seleccionar Imagen</p>
-                    </div>
-                    <input type="file" class="hidden" name="file" accept=".jpg,.jpeg,.png" onchange="mostrarNombreArchivo(this)" />
-                </label>
-
-                <p id="nombreArchivo" class="mt-4 text-teal-200 text-sm"></p>
-                <button type="submit" class="animated-button mt-8 bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2 rounded-full shadow-lg text-white font-semibold hover:from-purple-500 hover:to-blue-500 transition-transform duration-300">Analizar</button>
+<body>
+    <div class="container">
+        <!-- Sección de subir imagen -->
+        <div class="upload-section">
+            <h1>¡Sube una imagen para analizarla!</h1>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="image" name="image" accept="image/*">
+                <button type="submit">Subir Imagen</button>
             </form>
-        </section>
-        <section id="loading" class="hidden text-center my-4">
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                <div class="bg-blue-500 h-2.5 rounded-full animate-pulse" style="width: 75%;"></div>
+        </div>
+
+        <!-- Sección de imagen original -->
+        <div class="original-image-section">
+            <h2>Imagen Original</h2>
+            <div class="image-container">
+                <img id="originalImage" src="" alt="Imagen Original">
             </div>
-            <p class="text-gray-500 mt-2">Cargando...</p>
-        </section>
+        </div>
 
-        <section id="results" class="hidden">
-            <h2 class="text-xl font-semibold mb-4 text-purple-300">Resultado</h2>
-            <img id="resultImage" class="w-full h-auto rounded-lg border-2 border-purple-300" src="" alt="Resultado del Análisis">
-        </section>
+        <!-- Sección de historial de imágenes -->
+        <div class="historico-images-section">
+            <h2>Historial de Imágenes Subidas</h2>
+            <div id="historicoImages" class="image-gallery"></div>
+        </div>
 
-        <section id="error" class="hidden mt-4 bg-red-500 text-white p-3 rounded-lg">
-            <p>No se pudo analizar la imagen.</p>
-        </section>
-
-        {% if images %}
-        <section class="mt-10">
-            <h2 class="text-xl font-semibold mb-3 text-blue-200">Imágenes anteriores</h2>
-            <div class="grid grid-cols-3 gap-4">
-                {% for image in images %}
-                <div class="relative group">
-                    <img src="{{ url_for('static', filename='uploads/' + image) }}" alt="{{ image }}" class="w-full h-24 object-cover rounded-lg transform hover:scale-105 transition" onclick="analyzeExisting('{{ image }}')">
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-        {% endif %}
+        <!-- Sección de imágenes procesadas -->
+        <div class="processed-images-section">
+            <h2>Imágenes Procesadas</h2>
+            <div id="processedImages" class="image-gallery"></div>
+        </div>
     </div>
 
-    <script>
-        function mostrarNombreArchivo(input) {
-            var nombreArchivo = input.files[0].name;
-            document.getElementById('nombreArchivo').textContent = "Archivo: " + nombreArchivo;
-        }
-
-        function showLoading() {
-            $('#loading').removeClass('hidden');
-            $('#error').addClass('hidden');
-            $('#results').addClass('hidden');
-        }
-        function hideLoading() {
-            $('#loading').addClass('hidden');
-        }
-
-        $(document).ready(function() {
-            $('#uploadForm').on('submit', function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                showLoading();
-                $.ajax({
-                    url: '/analyze',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        hideLoading();
-                        $('#results').removeClass('hidden');
-                        $('#resultImage').attr('src', 'data:image/png;base64,' + response.image);
-                    },
-                    error: function(xhr) {
-                        hideLoading();
-                        $('#error').removeClass('hidden').text(xhr.responseJSON?.error || 'Error en el análisis.');
-                    }
-                });
-            });
-        });
-
-        function analyzeExisting(filename) {
-            showLoading();
-            const formData = new FormData();
-            formData.append('existing_file', filename);
-            $.ajax({
-                url: '/analyze',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    hideLoading();
-                    $('#results').removeClass('hidden');
-                    $('#resultImage').attr('src', 'data:image/png;base64,' + response.image);
-                },
-                error: function(xhr) {
-                    hideLoading();
-                    $('#error').removeClass('hidden').text(xhr.responseJSON?.error || 'Ocurrió un error');
-                }
-            });
-        }
-    </script>
+    <!-- Enlace al archivo JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
