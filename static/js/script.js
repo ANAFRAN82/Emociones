@@ -1,5 +1,3 @@
-// static/js/script.js
-
 // Función para cargar las imágenes previas subidas
 async function cargarHistorial() {
     try {
@@ -178,3 +176,9 @@ form.addEventListener('submit', async (e) => {
         console.error('Error al subir la imagen:', error);
     }
 });
+
+// Lógica para actualizar el texto con la emoción detectada
+function mostrarEmocion(emocion) {
+    document.getElementById('emotionText').innerText = emocion;
+    document.getElementById('emotionDisplay').style.display = 'block';
+}
