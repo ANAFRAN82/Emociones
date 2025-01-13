@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explorador de Emociones - Análisis Creativo</title>
+    <title>Puntos Faciales y emociones Ana Franco </title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -81,7 +81,7 @@
         }
 
         .image-display img {
-            max-width: 60%; /* Ajusta el tamaño de la imagen */
+            max-width: 50%;
             border-radius: 20px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
         }
@@ -107,7 +107,7 @@
     <div class="wrapper">
         <!-- Sección de subir imagen -->
         <div class="upload-area">
-            <h1>Sube una Imagen y Explora las Emociones</h1>
+            <h1>Sube una Imagen</h1>
             <form id="uploadForm" enctype="multipart/form-data">
                 <input type="file" id="image" name="image" accept="image/*">
                 <button type="submit">¡Analizar!</button>
@@ -116,24 +116,25 @@
 
         <!-- Sección de imagen original -->
         <div class="image-section">
-            <h2>Tu Imagen Subida</h2>
+            <h2>Imagen original</h2>
             <div class="image-display">
                 <img id="originalImage" src="" alt="Imagen Original">
             </div>
         </div>
-
-        <!-- Sección de historial de imágenes -->
-        <div class="history-section">
-            <h2>Historial de Imágenes</h2>
-            <div id="historicoImages" class="image-collection"></div>
-        </div>
-
+        
         <!-- Sección de imágenes procesadas -->
         <div class="result-section">
-            <h2>Imágenes Analizadas</h2>
+            <h2>Resuktado</h2>
             <div id="processedImages" class="image-collection"></div>
         </div>
     </div>
+
+
+        <!-- Sección de historial de imágenes -->
+        <div class="history-section">
+            <h2>Imágene anteriores</h2>
+            <div id="historicoImages" class="image-collection"></div>
+        </div>
 
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
